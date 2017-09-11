@@ -1,0 +1,26 @@
+{
+  "engines": {
+    "node": "^0.12.7 || ^4.4.0 || ^6.0.0",
+    "npm": "^2.11.x"
+  },
+  "dependencies": {
+    "sap-xssec": "0.9.1",
+    "sap-xsenv": "1.2.3",
+    "sap-xsjs": "1.11.4",
+    "sap-hdbext": "4.2.2",
+    "sap-logging": "~1.4",
+    "sap-jobs-client": "~1.0.10",
+    "express": "~4.14",
+    "passport": "~0.3.2",
+    "winston": "1.0.0",
+    "async": "latest"
+  },
+  "devDependencies": {},
+  "files": [],
+  "main": "server.js",
+  "name": "user-js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "version": "1.0.0"
+}

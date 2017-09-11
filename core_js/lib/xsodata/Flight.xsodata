@@ -1,0 +1,10 @@
+service {
+    "FLIGHT.SflightExt" 
+	  as "Flight" key generate local "ID";
+	  
+	"FLIGHT.SPFLIView"
+		as "Spfli" key generate local "ID";
+}
+annotations {
+   enable OData4SAP;
+}

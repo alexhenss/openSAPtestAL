@@ -1,0 +1,104 @@
+ID: openSAPHANA5
+_schema-version: '2.0'
+description: 'optional '
+version: 0.0.1
+
+modules:
+ - name: web
+   type: html5
+   path: web
+   requires:
+      - name: openSAPHANA-uaa
+      - name: core-js-service
+        group: destinations
+        properties:
+          name: core-backend
+          url: ~{url}
+          forwardAuthToken: true 
+      - name: user-js-service
+        group: destinations
+        properties:
+          name: user-backend
+          url: ~{url}
+          forwardAuthToken: true 
+
+
+ - name: core_db
+   type: hdb
+   path: core_db
+   requires:
+    - name: hdi-container
+      properties:
+        TARGET_CONTAINER: ~{hdi-container-name}
+    - name: CrossSchemaService
+      group: SERVICE_REPLACEMENTS
+      properties:
+        key: hdi-sflight-service
+        service: ~{sflight-service-name} 
+    - name: user-container
+      group: SERVICE_REPLACEMENTS
+      properties:
+        key: hdi-user-service
+        service: ~{user-container-name}
+
+ - name: user_db
+   type: hdb
+   path: user_db
+   requires:
+    - name: user-container
+      properties:
+        TARGET_CONTAINER: ~{user-container-name}
+
+
+ - name: core_js
+   type: nodejs
+   path: core_js
+   provides:
+    - name: core-js-service
+      properties:
+         url: "${default-url}"
+   requires:
+    - name: openSAPHANA-uaa
+    - name: hdi-container
+    - name: core_db
+
+
+ - name: user_js
+   type: nodejs
+   path: user_js
+   provides: 
+     - name: user-js-service
+       properties:
+         url: "${default-url}"
+   requires:
+      - name: openSAPHANA-uaa
+      - name: user-container
+      - name: user_db
+
+resources:
+ - name: openSAPHANA-uaa
+   type: com.sap.xs.uaa
+   parameters:
+    config_path: ./xs-security.json
+ - name: hdi-container
+   parameters:
+      config:
+         schema: openSAPHANA5
+   properties:
+      hdi-container-name: ${service-name}
+   type: com.sap.xs.hdi-container
+   
+ - name: CrossSchemaService
+   type: org.cloudfoundry.existing-service
+   parameters:
+     service-name: CROSS_SCHEMA_SFLIGHT_1
+   properties:
+     sflight-service-name: ${service-name}
+
+ - name: user-container
+   properties:
+    user-container-name: ${service-name}
+   type: com.sap.xs.hdi-container
+   parameters:
+    config:
+     schema: openSAPHANA5_USER
